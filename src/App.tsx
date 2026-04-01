@@ -93,9 +93,9 @@ export default function App() {
   };
 
   return (
-    <div className="bg-[#fcf9f0] text-[#1c1c17] min-h-screen pb-24 font-body selection:bg-[#c5a059] selection:text-white">
+    <div className="bg-black text-white min-h-screen pb-24 font-body selection:bg-[#c5a059] selection:text-white">
       {/* Decorative Top Background */}
-      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-[#f1eee5] to-transparent -z-10"></div>
+      <div className="absolute top-0 left-0 w-full h-96 bg-gradient-to-b from-neutral-900 to-transparent -z-10"></div>
 
       <main className="max-w-md mx-auto px-4 py-8 md:py-12">
         
@@ -160,24 +160,24 @@ export default function App() {
             </div>
 
             {/* Bottom Info Box */}
-            <div className="absolute bottom-6 left-5 right-5 bg-[#fcf9f0]/95 backdrop-blur-md p-6 border border-[#c5a059]/40 shadow-2xl z-20">
-              <p className="font-body font-bold text-[#775a19] tracking-widest uppercase text-sm text-center mb-2">
+            <div className="absolute bottom-6 left-5 right-5 bg-black/80 backdrop-blur-md p-6 border border-[#c5a059]/40 shadow-2xl z-20">
+              <p className="font-body font-bold text-[#e9c176] tracking-widest uppercase text-sm text-center mb-2">
                 Vamos comemorar juntos!
               </p>
-              <p className="font-body text-[#4e4639] text-[10px] uppercase tracking-widest text-center mb-6">
+              <p className="font-body text-neutral-300 text-[10px] uppercase tracking-widest text-center mb-6">
                 Programe sua agenda e compareça
               </p>
 
               <div className="flex flex-col gap-5">
                 <div className="flex items-center gap-4 justify-center">
-                  <Beer className="text-[#775a19] w-7 h-7 stroke-[1.5]" />
-                  <p className="font-bold text-[#1c1c17] text-sm md:text-base uppercase tracking-wider">
+                  <Beer className="text-[#e9c176] w-7 h-7 stroke-[1.5]" />
+                  <p className="font-bold text-white text-sm md:text-base uppercase tracking-wider">
                     Data: 01/05/2026
                   </p>
                 </div>
                 <div className="flex items-center gap-4 justify-center">
-                  <MapPin className="text-[#775a19] w-7 h-7 stroke-[1.5]" />
-                  <p className="font-bold text-[#1c1c17] text-sm md:text-base uppercase tracking-wider">
+                  <MapPin className="text-[#e9c176] w-7 h-7 stroke-[1.5]" />
+                  <p className="font-bold text-white text-sm md:text-base uppercase tracking-wider">
                     Local: Sítio do Honório
                   </p>
                 </div>
@@ -190,15 +190,15 @@ export default function App() {
         <div className="space-y-12">
           {/* Location Details */}
           <section className="text-center px-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#f1eee5] text-[#775a19] mb-4 border border-[#d1c5b4]">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-900 text-[#e9c176] mb-4 border border-[#c5a059]/30">
               <Map size={24} strokeWidth={1.5} />
             </div>
-            <h3 className="serif-heading text-2xl text-[#775a19] mb-3">Como Chegar</h3>
-            <p className="text-[#4e4639] text-sm leading-relaxed mb-6">
+            <h3 className="serif-heading text-2xl text-[#e9c176] mb-3">Como Chegar</h3>
+            <p className="text-neutral-400 text-sm leading-relaxed mb-6">
               O Sítio do Honório é um refúgio cercado pela natureza. Preparamos um mapa para facilitar sua chegada.
             </p>
             
-            <div className="w-full rounded-xl overflow-hidden shadow-md border border-[#d1c5b4] bg-white">
+            <div className="w-full rounded-xl overflow-hidden shadow-md border border-[#c5a059]/30 bg-neutral-900">
               <iframe 
                 src="https://www.google.com/maps/embed?pb=!4v1775083858759!6m8!1m7!1sSscnbQfssEJAPI11bczYJw!2m2!1d-21.69676751136075!2d-43.0789804187288!3f0.2798825395250226!4f-0.18426403253498336!5f0.7820865974627469" 
                 width="100%" 
@@ -212,33 +212,33 @@ export default function App() {
             </div>
           </section>
 
-          <hr className="border-[#d1c5b4]/50 w-24 mx-auto" />
+          <hr className="border-[#c5a059]/30 w-24 mx-auto" />
 
           {/* RSVP Form Section */}
-          <section className="bg-[#f6f3ea] p-8 rounded-2xl relative overflow-hidden border border-[#d1c5b4]/30 shadow-sm" id="rsvp">
+          <section className="bg-neutral-900 p-8 rounded-2xl relative overflow-hidden border border-[#c5a059]/30 shadow-sm" id="rsvp">
             <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
               <Sparkles size={100} />
             </div>
             
             <div className="relative z-10">
               <div className="text-center mb-10">
-                <h3 className="serif-heading text-3xl text-[#775a19] mb-3">
+                <h3 className="serif-heading text-3xl text-[#e9c176] mb-3">
                   Confirme sua Presença
                 </h3>
-                <p className="text-[#4e4639] text-sm">
+                <p className="text-neutral-400 text-sm">
                   Sua presença tornará este dia ainda mais especial.
                 </p>
               </div>
 
               {isSubmitted ? (
-                <div className="bg-white p-8 rounded-xl text-center border border-[#c5a059]/30 shadow-sm">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#bcf0ae]/30 text-[#3b6934] mb-4">
+                <div className="bg-neutral-950 p-8 rounded-xl text-center border border-[#c5a059]/30 shadow-sm">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#bcf0ae]/10 text-[#5c9e52] mb-4">
                     <UserCheck size={32} />
                   </div>
-                  <h4 className="serif-heading text-2xl text-[#775a19] mb-2">
+                  <h4 className="serif-heading text-2xl text-[#e9c176] mb-2">
                     Obrigado por confirmar!
                   </h4>
-                  <p className="text-[#4e4639] text-sm">
+                  <p className="text-neutral-400 text-sm">
                     Sua resposta foi registrada com sucesso. Mal podemos esperar para celebrar com você.
                   </p>
                 </div>
@@ -246,7 +246,7 @@ export default function App() {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="space-y-4">
                     <div className="space-y-1.5">
-                      <label className="text-[#775a19] font-bold text-[10px] uppercase tracking-widest ml-1">
+                      <label className="text-[#e9c176] font-bold text-[10px] uppercase tracking-widest ml-1">
                         Nome
                       </label>
                       <input
@@ -254,13 +254,13 @@ export default function App() {
                         value={formData.firstName}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white border border-[#d1c5b4]/50 rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-[#c5a059] focus:border-transparent focus:outline-none transition-all placeholder:text-[#a39a8a] text-sm"
+                        className="w-full bg-neutral-950 border border-[#c5a059]/30 rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-[#c5a059] focus:border-transparent focus:outline-none transition-all placeholder:text-neutral-600 text-white text-sm"
                         placeholder="Seu nome"
                         type="text"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="text-[#775a19] font-bold text-[10px] uppercase tracking-widest ml-1">
+                      <label className="text-[#e9c176] font-bold text-[10px] uppercase tracking-widest ml-1">
                         Sobrenome
                       </label>
                       <input
@@ -268,26 +268,26 @@ export default function App() {
                         value={formData.lastName}
                         onChange={handleInputChange}
                         required
-                        className="w-full bg-white border border-[#d1c5b4]/50 rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-[#c5a059] focus:border-transparent focus:outline-none transition-all placeholder:text-[#a39a8a] text-sm"
+                        className="w-full bg-neutral-950 border border-[#c5a059]/30 rounded-lg px-4 py-3.5 focus:ring-2 focus:ring-[#c5a059] focus:border-transparent focus:outline-none transition-all placeholder:text-neutral-600 text-white text-sm"
                         placeholder="Seu sobrenome"
                         type="text"
                       />
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 bg-white p-5 rounded-lg border border-[#d1c5b4]/50 hover:border-[#c5a059]/50 transition-colors cursor-pointer group">
+                  <div className="flex items-center gap-4 bg-neutral-950 p-5 rounded-lg border border-[#c5a059]/30 hover:border-[#c5a059] transition-colors cursor-pointer group">
                     <div className="relative flex items-center">
                       <input
                         name="attending"
                         checked={formData.attending}
                         onChange={handleInputChange}
-                        className="w-5 h-5 rounded border-[#d1c5b4] text-[#3b6934] focus:ring-[#3b6934] cursor-pointer accent-[#3b6934]"
+                        className="w-5 h-5 rounded border-neutral-700 bg-neutral-900 text-[#c5a059] focus:ring-[#c5a059] cursor-pointer accent-[#c5a059]"
                         id="check-in"
                         type="checkbox"
                       />
                     </div>
                     <label
-                      className="text-[#1c1c17] text-sm cursor-pointer flex-1 select-none font-medium"
+                      className="text-white text-sm cursor-pointer flex-1 select-none font-medium"
                       htmlFor="check-in"
                     >
                       Sim, estarei presente para celebrar!
@@ -295,14 +295,14 @@ export default function App() {
                   </div>
 
                   {error && (
-                    <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
+                    <div className="text-red-400 text-sm text-center bg-red-950/50 p-3 rounded-lg border border-red-900/50">
                       {error}
                     </div>
                   )}
 
                   <button
                     disabled={isSubmitting}
-                    className="w-full bg-[#775a19] hover:bg-[#5d4201] text-white font-bold py-4 rounded-lg uppercase tracking-[0.2em] text-xs shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
+                    className="w-full bg-[#c5a059] hover:bg-[#b38f4a] text-black font-bold py-4 rounded-lg uppercase tracking-[0.2em] text-xs shadow-md hover:shadow-lg transition-all duration-300 disabled:opacity-70 disabled:cursor-not-allowed"
                     type="submit"
                   >
                     {isSubmitting ? 'Enviando...' : 'Confirmar RSVP'}
@@ -315,40 +315,40 @@ export default function App() {
       </main>
 
       {/* BottomNavBar */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 pb-6 pt-3 bg-[#fcf9f0]/80 backdrop-blur-xl border-t border-[#d1c5b4]/30">
+      <nav className="fixed bottom-0 left-0 w-full z-50 grid grid-cols-4 items-start px-2 pb-6 pt-3 bg-[#c5a059] shadow-[0_-10px_30px_rgba(0,0,0,0.5)] border-t border-[#e9c176]/50">
         <a
-          className="flex flex-col items-center justify-center text-[#775a19] scale-105 transition-all duration-200"
+          className="flex flex-col items-center justify-start text-white hover:text-black transition-all duration-200 px-1 text-center"
           href="#"
         >
-          <Sparkles size={22} className="mb-1" strokeWidth={1.5} />
-          <span className="font-sans text-[10px] font-bold uppercase tracking-widest">
+          <Sparkles size={22} className="mb-1 shrink-0" strokeWidth={1.5} />
+          <span className="font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-tight break-words w-full">
             Convite
           </span>
         </a>
         <a
-          className="flex flex-col items-center justify-center text-[#7f7667] hover:text-[#775a19] transition-all duration-200"
+          className="flex flex-col items-center justify-start text-white hover:text-black transition-all duration-200 px-1 text-center"
           href="#local"
         >
-          <MapPin size={22} className="mb-1" strokeWidth={1.5} />
-          <span className="font-sans text-[10px] font-bold uppercase tracking-widest">
+          <MapPin size={22} className="mb-1 shrink-0" strokeWidth={1.5} />
+          <span className="font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-tight break-words w-full">
             Local
           </span>
         </a>
         <a
-          className="flex flex-col items-center justify-center text-[#7f7667] hover:text-[#775a19] transition-all duration-200"
+          className="flex flex-col items-center justify-start text-white hover:text-black transition-all duration-200 px-1 text-center"
           href="#rsvp"
         >
-          <UserCheck size={22} className="mb-1" strokeWidth={1.5} />
-          <span className="font-sans text-[10px] font-bold uppercase tracking-widest">
+          <UserCheck size={22} className="mb-1 shrink-0" strokeWidth={1.5} />
+          <span className="font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-tight break-words w-full">
             RSVP
           </span>
         </a>
         <Link
-          className="flex flex-col items-center justify-center text-[#7f7667] hover:text-[#775a19] transition-all duration-200"
+          className="flex flex-col items-center justify-start text-white hover:text-black transition-all duration-200 px-1 text-center"
           to="/admin"
         >
-          <Lock size={22} className="mb-1" strokeWidth={1.5} />
-          <span className="font-sans text-[10px] font-bold uppercase tracking-widest">
+          <Lock size={22} className="mb-1 shrink-0" strokeWidth={1.5} />
+          <span className="font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-tight break-words w-full">
             Admin
           </span>
         </Link>

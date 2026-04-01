@@ -217,15 +217,15 @@ export default function Admin() {
 
   if (!loggedInEmail) {
     return (
-      <div className="min-h-screen bg-[#fcf9f0] flex items-center justify-center p-4 font-body">
-        <div className="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-[#d1c5b4]">
-          <h1 className="serif-heading text-3xl text-[#775a19] mb-2">Painel de Controle</h1>
-          <p className="text-[#4e4639] mb-6">
+      <div className="min-h-screen bg-black flex items-center justify-center p-4 font-body">
+        <div className="bg-neutral-900 p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-[#c5a059]/30">
+          <h1 className="serif-heading text-3xl text-[#e9c176] mb-2">Painel de Controle</h1>
+          <p className="text-neutral-400 mb-6">
             Digite seu e-mail para acessar o painel.
           </p>
           
           {loginError && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+            <div className="bg-red-950/50 border border-red-900/50 text-red-400 px-4 py-3 rounded mb-4 text-sm">
               {loginError}
             </div>
           )}
@@ -237,14 +237,14 @@ export default function Admin() {
                 placeholder="Seu E-mail"
                 value={loginInput}
                 onChange={(e) => setLoginInput(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-[#d1c5b4] focus:outline-none focus:ring-2 focus:ring-[#775a19] bg-[#fcf9f0]"
+                className="w-full px-4 py-3 rounded-lg border border-[#c5a059]/30 focus:outline-none focus:ring-2 focus:ring-[#c5a059] bg-neutral-950 text-white placeholder:text-neutral-600"
                 required
               />
             </div>
             <button
               type="submit"
               disabled={isLoggingIn}
-              className="flex items-center justify-center gap-2 w-full bg-[#775a19] hover:bg-[#5d4201] text-white font-bold py-3 rounded-lg transition-colors disabled:opacity-70"
+              className="flex items-center justify-center gap-2 w-full bg-[#c5a059] hover:bg-[#b38f4a] text-black font-bold py-3 rounded-lg transition-colors disabled:opacity-70"
             >
               <LogIn size={20} />
               {isLoggingIn ? 'Verificando...' : 'Acessar Painel'}
@@ -259,18 +259,21 @@ export default function Admin() {
   const notAttendingCount = rsvps.filter((r) => !r.attending).length;
 
   return (
-    <div className="min-h-screen bg-[#fcf9f0] p-4 md:p-8 font-body text-[#1c1c17]">
-      <div className="max-w-4xl mx-auto">
-        <header className="flex flex-col md:flex-row justify-between items-center mb-8 bg-white p-4 rounded-xl shadow-sm border border-[#d1c5b4] gap-4">
-          <div className="flex items-center gap-3">
-            <Users className="text-[#775a19]" size={28} />
-            <h1 className="serif-heading text-2xl text-[#775a19]">Painel de Controle</h1>
+    <div className="min-h-screen bg-black p-4 md:p-8 font-body text-white">
+      <div className="max-w-4xl mx-auto pb-8">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-8 bg-neutral-900 p-4 rounded-xl shadow-sm border border-[#c5a059]/30 gap-4">
+          <div className="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start">
+            <Users className="text-[#e9c176]" size={28} />
+            <h1 className="serif-heading text-2xl text-[#e9c176]">Painel de Controle</h1>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-[#4e4639] hidden md:inline">{loggedInEmail}</span>
+          <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 w-full md:w-auto">
+            <a href="/" className="text-sm text-[#c5a059] hover:text-[#e9c176] transition-colors font-bold">
+              ← Voltar ao Convite
+            </a>
+            <span className="text-sm text-neutral-400 hidden md:inline">{loggedInEmail}</span>
             <button
               onClick={handleLogout}
-              className="flex items-center gap-2 text-sm text-red-600 hover:text-red-800 transition-colors"
+              className="flex items-center gap-2 text-sm text-red-400 hover:text-red-300 transition-colors"
             >
               <LogOut size={18} />
               Sair
@@ -279,167 +282,70 @@ export default function Admin() {
         </header>
 
         {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+          <div className="bg-red-950/50 border border-red-900/50 text-red-400 px-4 py-3 rounded mb-6">
             {error}
           </div>
         )}
 
-        {/* Image Management Section */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d1c5b4] mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <ImageIcon className="text-[#775a19]" size={24} />
-            <h2 className="serif-heading text-xl text-[#775a19]">Imagem do Convite</h2>
-          </div>
-          <p className="text-sm text-[#4e4639] mb-4">
-            Faça o upload da imagem que você deseja exibir no topo do convite.
-          </p>
-          <form onSubmit={handleSaveImage} className="flex flex-col md:flex-row gap-4">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="flex-1 px-4 py-2 rounded-lg border border-[#d1c5b4] focus:outline-none focus:ring-2 focus:ring-[#775a19] bg-[#fcf9f0] file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#775a19] file:text-white hover:file:bg-[#5d4201] cursor-pointer"
-            />
-            <button
-              type="submit"
-              disabled={isSavingImage || !heroImageUrl}
-              className="flex items-center justify-center gap-2 bg-[#775a19] hover:bg-[#5d4201] text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-70"
-            >
-              <Save size={18} />
-              {isSavingImage ? 'Salvando...' : 'Salvar Imagem'}
-            </button>
-          </form>
-          {imageSaveMessage && (
-            <p className="mt-3 text-sm font-medium text-green-600">{imageSaveMessage}</p>
-          )}
-          {heroImageUrl && (
-            <div className="mt-4">
-              <p className="text-xs text-[#4e4639] mb-2 uppercase tracking-wider">Pré-visualização:</p>
-              <div className="w-full max-w-sm h-48 rounded-lg overflow-hidden border border-[#d1c5b4]">
-                <img src={heroImageUrl} alt="Preview" className="w-full h-full object-cover" />
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Admin Emails Section */}
-        <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d1c5b4] mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <UserPlus className="text-[#775a19]" size={24} />
-            <h2 className="serif-heading text-xl text-[#775a19]">Acesso ao Painel</h2>
-          </div>
-          <p className="text-sm text-[#4e4639] mb-4">
-            Adicione os e-mails das pessoas que também poderão acessar este painel de administração.
-          </p>
-          
-          <form onSubmit={handleAddAdminEmail} className="flex flex-col md:flex-row gap-4 mb-6">
-            <input
-              type="email"
-              placeholder="E-mail do novo administrador"
-              value={newAdminEmail}
-              onChange={(e) => setNewAdminEmail(e.target.value)}
-              className="flex-1 px-4 py-2 rounded-lg border border-[#d1c5b4] focus:outline-none focus:ring-2 focus:ring-[#775a19] bg-[#fcf9f0]"
-              required
-            />
-            <button
-              type="submit"
-              disabled={isAddingAdmin}
-              className="flex items-center justify-center gap-2 bg-[#775a19] hover:bg-[#5d4201] text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-70"
-            >
-              <UserPlus size={18} />
-              {isAddingAdmin ? 'Adicionando...' : 'Adicionar'}
-            </button>
-          </form>
-
-          <div className="border border-[#d1c5b4] rounded-lg overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-[#f6f3ea] border-b border-[#d1c5b4]">
-                  <th className="p-3 font-bold text-[#775a19] text-sm uppercase tracking-wider">E-mail</th>
-                  <th className="p-3 font-bold text-[#775a19] text-sm uppercase tracking-wider text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="border-b border-[#f1eee5] bg-[#fcf9f0]">
-                  <td className="p-3 text-sm text-[#1c1c17]">adrianorosa1@hotmail.com <span className="text-xs text-[#c5a059] ml-2 font-bold">(Admin Principal)</span></td>
-                  <td className="p-3 text-right"></td>
-                </tr>
-                {adminEmails.map((item) => (
-                  <tr key={item.id} className="border-b border-[#f1eee5] last:border-0 hover:bg-[#fcf9f0]">
-                    <td className="p-3 text-sm text-[#1c1c17]">{item.email}</td>
-                    <td className="p-3 text-right">
-                      <button
-                        onClick={() => handleRemoveAdminEmail(item.id)}
-                        className="text-red-500 hover:text-red-700 p-1 rounded transition-colors"
-                        title="Remover"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
+        {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d1c5b4] text-center">
-            <h3 className="text-[#4e4639] text-sm uppercase tracking-widest mb-2">Total de Respostas</h3>
-            <p className="text-4xl font-bold text-[#775a19]">{rsvps.length}</p>
+          <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-[#c5a059]/30 text-center">
+            <h3 className="text-neutral-400 text-sm uppercase tracking-widest mb-2">Total de Respostas</h3>
+            <p className="text-4xl font-bold text-[#e9c176]">{rsvps.length}</p>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d1c5b4] text-center">
-            <h3 className="text-[#4e4639] text-sm uppercase tracking-widest mb-2">Confirmados</h3>
-            <p className="text-4xl font-bold text-green-600 flex items-center justify-center gap-2">
+          <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-[#c5a059]/30 text-center">
+            <h3 className="text-neutral-400 text-sm uppercase tracking-widest mb-2">Confirmados</h3>
+            <p className="text-4xl font-bold text-green-400 flex items-center justify-center gap-2">
               <CheckCircle size={28} /> {attendingCount}
             </p>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-[#d1c5b4] text-center">
-            <h3 className="text-[#4e4639] text-sm uppercase tracking-widest mb-2">Não Vão</h3>
-            <p className="text-4xl font-bold text-red-600 flex items-center justify-center gap-2">
+          <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-[#c5a059]/30 text-center">
+            <h3 className="text-neutral-400 text-sm uppercase tracking-widest mb-2">Não Vão</h3>
+            <p className="text-4xl font-bold text-red-400 flex items-center justify-center gap-2">
               <XCircle size={28} /> {notAttendingCount}
             </p>
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-sm border border-[#d1c5b4] overflow-hidden">
-          <div className="p-6 border-b border-[#d1c5b4] bg-[#fcf9f0]">
-            <h2 className="serif-heading text-xl text-[#775a19]">Respostas Detalhadas</h2>
+        {/* Detailed List */}
+        <div className="bg-neutral-900 rounded-xl shadow-sm border border-[#c5a059]/30 overflow-hidden mb-8">
+          <div className="p-6 border-b border-[#c5a059]/30 bg-neutral-950">
+            <h2 className="serif-heading text-xl text-[#e9c176]">Respostas Detalhadas</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-[#f6f3ea] border-b border-[#d1c5b4]">
-                  <th className="p-4 font-bold text-[#775a19] text-sm uppercase tracking-wider">Nome</th>
-                  <th className="p-4 font-bold text-[#775a19] text-sm uppercase tracking-wider">Status</th>
-                  <th className="p-4 font-bold text-[#775a19] text-sm uppercase tracking-wider">Data</th>
+                <tr className="bg-neutral-950 border-b border-[#c5a059]/30">
+                  <th className="p-4 font-bold text-[#e9c176] text-sm uppercase tracking-wider">Nome</th>
+                  <th className="p-4 font-bold text-[#e9c176] text-sm uppercase tracking-wider">Status</th>
+                  <th className="p-4 font-bold text-[#e9c176] text-sm uppercase tracking-wider">Data</th>
                 </tr>
               </thead>
               <tbody>
                 {rsvps.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="p-8 text-center text-[#4e4639]">
+                    <td colSpan={3} className="p-8 text-center text-neutral-400">
                       Nenhuma resposta recebida ainda.
                     </td>
                   </tr>
                 ) : (
                   rsvps.map((rsvp) => (
-                    <tr key={rsvp.id} className="border-b border-[#f1eee5] last:border-0 hover:bg-[#fcf9f0] transition-colors">
-                      <td className="p-4 font-medium text-[#1c1c17]">
+                    <tr key={rsvp.id} className="border-b border-neutral-800 last:border-0 hover:bg-neutral-800/50 transition-colors">
+                      <td className="p-4 font-medium text-white">
                         {rsvp.firstName} {rsvp.lastName}
                       </td>
                       <td className="p-4">
                         {rsvp.attending ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold uppercase tracking-wide">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-900/30 text-green-400 border border-green-800/50 text-xs font-bold uppercase tracking-wide">
                             <CheckCircle size={14} /> Confirmado
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold uppercase tracking-wide">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-900/30 text-red-400 border border-red-800/50 text-xs font-bold uppercase tracking-wide">
                             <XCircle size={14} /> Não vai
                           </span>
                         )}
                       </td>
-                      <td className="p-4 text-sm text-[#4e4639]">
+                      <td className="p-4 text-sm text-neutral-400">
                         {rsvp.createdAt?.toDate().toLocaleDateString('pt-BR', {
                           day: '2-digit',
                           month: 'short',
@@ -451,6 +357,107 @@ export default function Admin() {
                     </tr>
                   ))
                 )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Image Management Section */}
+        <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-[#c5a059]/30 mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <ImageIcon className="text-[#e9c176]" size={24} />
+            <h2 className="serif-heading text-xl text-[#e9c176]">Imagem do Convite</h2>
+          </div>
+          <p className="text-sm text-neutral-400 mb-4">
+            Faça o upload da imagem que você deseja exibir no topo do convite.
+          </p>
+          <form onSubmit={handleSaveImage} className="flex flex-col gap-4">
+            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-[#c5a059]/30 border-dashed rounded-lg cursor-pointer bg-neutral-950 hover:bg-neutral-900 transition-colors">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                <ImageIcon className="w-8 h-8 mb-3 text-[#c5a059]" />
+                <p className="mb-2 text-sm text-neutral-400"><span className="font-bold text-[#e9c176]">Clique para fazer upload</span> ou arraste a imagem</p>
+                <p className="text-xs text-neutral-500">PNG, JPG ou GIF</p>
+              </div>
+              <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+            </label>
+            <button
+              type="submit"
+              disabled={isSavingImage || !heroImageUrl}
+              className="flex items-center justify-center gap-2 bg-[#c5a059] hover:bg-[#b38f4a] text-black font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-70 w-full md:w-auto md:self-end"
+            >
+              <Save size={18} />
+              {isSavingImage ? 'Salvando...' : 'Salvar Imagem'}
+            </button>
+          </form>
+          {imageSaveMessage && (
+            <p className="mt-3 text-sm font-medium text-green-400">{imageSaveMessage}</p>
+          )}
+          {heroImageUrl && (
+            <div className="mt-4">
+              <p className="text-xs text-neutral-400 mb-2 uppercase tracking-wider">Pré-visualização:</p>
+              <div className="w-full max-w-sm h-48 rounded-lg overflow-hidden border border-[#c5a059]/30">
+                <img src={heroImageUrl} alt="Preview" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Admin Emails Section */}
+        <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-[#c5a059]/30">
+          <div className="flex items-center gap-3 mb-4">
+            <UserPlus className="text-[#e9c176]" size={24} />
+            <h2 className="serif-heading text-xl text-[#e9c176]">Acesso ao Painel</h2>
+          </div>
+          <p className="text-sm text-neutral-400 mb-4">
+            Adicione os e-mails das pessoas que também poderão acessar este painel de administração.
+          </p>
+          
+          <form onSubmit={handleAddAdminEmail} className="flex flex-col md:flex-row gap-4 mb-6">
+            <input
+              type="email"
+              placeholder="E-mail do novo administrador"
+              value={newAdminEmail}
+              onChange={(e) => setNewAdminEmail(e.target.value)}
+              className="flex-1 px-4 py-2 rounded-lg border border-[#c5a059]/30 focus:outline-none focus:ring-2 focus:ring-[#c5a059] bg-neutral-950 text-white placeholder:text-neutral-600"
+              required
+            />
+            <button
+              type="submit"
+              disabled={isAddingAdmin}
+              className="flex items-center justify-center gap-2 bg-[#c5a059] hover:bg-[#b38f4a] text-black font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-70"
+            >
+              <UserPlus size={18} />
+              {isAddingAdmin ? 'Adicionando...' : 'Adicionar'}
+            </button>
+          </form>
+
+          <div className="border border-[#c5a059]/30 rounded-lg overflow-hidden">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-neutral-950 border-b border-[#c5a059]/30">
+                  <th className="p-3 font-bold text-[#e9c176] text-sm uppercase tracking-wider">E-mail</th>
+                  <th className="p-3 font-bold text-[#e9c176] text-sm uppercase tracking-wider text-right">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="border-b border-neutral-800 bg-neutral-900">
+                  <td className="p-3 text-sm text-white break-all">adrianorosa1@hotmail.com <span className="text-xs text-[#c5a059] ml-2 font-bold whitespace-nowrap">(Admin Principal)</span></td>
+                  <td className="p-3 text-right"></td>
+                </tr>
+                {adminEmails.map((item) => (
+                  <tr key={item.id} className="border-b border-neutral-800 last:border-0 hover:bg-neutral-800/50">
+                    <td className="p-3 text-sm text-white break-all">{item.email}</td>
+                    <td className="p-3 text-right">
+                      <button
+                        onClick={() => handleRemoveAdminEmail(item.id)}
+                        className="text-red-400 hover:text-red-300 p-1 rounded transition-colors"
+                        title="Remover"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
