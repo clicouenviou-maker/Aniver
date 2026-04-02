@@ -3,6 +3,7 @@ import { Calendar, MapPin, Sparkles, UserCheck, Beer, Map, Lock } from 'lucide-r
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { db } from './firebase';
+import confetti from 'canvas-confetti';
 
 export default function App() {
   const [formData, setFormData] = useState({
@@ -40,10 +41,28 @@ export default function App() {
   };
 
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
+  const [isEventStarted, setIsEventStarted] = useState(false);
+  const [isParabensTime, setIsParabensTime] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeLeft(calculateTimeLeft());
+      const targetDate = new Date('2026-05-01T12:00:00');
+      const parabensStart = new Date('2026-05-01T18:00:00');
+      const parabensEnd = new Date('2026-05-01T18:01:00');
+      const now = new Date();
+
+      if (now >= targetDate) {
+        setIsEventStarted(true);
+      } else {
+        setIsEventStarted(false);
+        setTimeLeft(calculateTimeLeft());
+      }
+
+      if (now >= parabensStart && now < parabensEnd) {
+        setIsParabensTime(true);
+      } else {
+        setIsParabensTime(false);
+      }
     }, 1000);
     return () => clearInterval(timer);
   }, []);
@@ -61,6 +80,33 @@ export default function App() {
       }
     };
     fetchSettings();
+
+    // Initial fireworks effect
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function() {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      confetti({
+        ...defaults, particleCount,
+        origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }
+      });
+      confetti({
+        ...defaults, particleCount,
+        origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
+      });
+    }, 250);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +130,32 @@ export default function App() {
         createdAt: serverTimestamp(),
       });
       setIsSubmitted(true);
+      
+      // Side confetti cannons on success
+      const end = Date.now() + 2 * 1000;
+      const colors = ['#c5a059', '#ffffff', '#e9c176'];
+
+      (function frame() {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: colors
+        });
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: colors
+        });
+
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+
     } catch (err) {
       console.error('Error adding document: ', err);
       setError('Ocorreu um erro ao enviar seu RSVP. Tente novamente.');
@@ -104,7 +176,7 @@ export default function App() {
           {/* Subtle glow behind the card */}
           <div className="absolute inset-0 bg-[#c5a059]/20 blur-3xl rounded-full scale-90 opacity-50 group-hover:opacity-70 transition-opacity duration-700"></div>
           
-          <div className="relative w-full aspect-[9/16] max-h-[800px] bg-stone-900 shadow-2xl overflow-hidden border-[10px] border-[#fcf9f0] ring-1 ring-[#d1c5b4] rounded-sm z-10">
+          <div className="relative w-full min-h-[650px] h-[85vh] max-h-[850px] bg-stone-900 shadow-2xl overflow-hidden border-[10px] border-[#fcf9f0] ring-1 ring-[#d1c5b4] rounded-sm z-10">
             {/* Outer Gold Border */}
             <div className="absolute inset-1 border-[1.5px] border-[#c5a059] z-20 pointer-events-none"></div>
             {/* Inner Gold Border */}
@@ -134,50 +206,59 @@ export default function App() {
                 <span className="text-lg tracking-[0.2em] leading-none mt-1 ml-1">05</span>
               </div>
 
-              <h1 className="script-font text-6xl md:text-7xl text-[#ffdea5] drop-shadow-2xl leading-none mt-2">
+              <h1 className="script-font text-6xl md:text-7xl drop-shadow-2xl leading-none mt-2 animate-shine-text">
                 Aniver Renata
               </h1>
             </div>
 
-            {/* Countdown Timer */}
-            <div className="absolute top-[60%] left-0 w-full -translate-y-1/2 z-20 flex justify-center gap-2 md:gap-4 px-4">
-              <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl">
-                <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.days}</span>
-                <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Dias</span>
+            {/* Countdown Timer or Parabens Message */}
+            {isParabensTime ? (
+              <div className="absolute bottom-[35%] md:bottom-[40%] left-0 w-full z-20 flex justify-center px-4">
+                <div className="bg-black/80 backdrop-blur-md border border-[#c5a059] p-6 rounded-xl shadow-2xl text-center animate-pulse">
+                  <h2 className="serif-heading text-xl md:text-2xl text-[#e9c176] mb-2">Vamos cantar parabéns para você agora!</h2>
+                  <Sparkles className="inline-block text-[#ffdea5]" size={32} />
+                </div>
               </div>
-              <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl">
-                <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.hours}</span>
-                <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Horas</span>
+            ) : !isEventStarted ? (
+              <div className="absolute bottom-[35%] md:bottom-[40%] left-0 w-full z-20 flex justify-center gap-2 md:gap-4 px-4">
+                <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl animate-shine-border">
+                  <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.days}</span>
+                  <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Dias</span>
+                </div>
+                <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl animate-shine-border" style={{ animationDelay: '1.2s' }}>
+                  <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.hours}</span>
+                  <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Horas</span>
+                </div>
+                <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl animate-shine-border" style={{ animationDelay: '1.4s' }}>
+                  <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.minutes}</span>
+                  <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Min</span>
+                </div>
+                <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl animate-shine-border" style={{ animationDelay: '1.6s' }}>
+                  <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.seconds}</span>
+                  <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Seg</span>
+                </div>
               </div>
-              <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl">
-                <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.minutes}</span>
-                <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Min</span>
-              </div>
-              <div className="flex flex-col items-center bg-black/40 backdrop-blur-md rounded-lg p-2 md:p-3 min-w-[60px] md:min-w-[70px] border border-[#e9c176]/30 shadow-xl">
-                <span className="text-2xl md:text-3xl serif-heading text-[#ffdea5]">{timeLeft.seconds}</span>
-                <span className="text-[8px] md:text-[9px] uppercase tracking-widest text-[#e9c176] mt-1">Seg</span>
-              </div>
-            </div>
+            ) : null}
 
             {/* Bottom Info Box */}
-            <div className="absolute bottom-6 left-5 right-5 bg-black/80 backdrop-blur-md p-6 border border-[#c5a059]/40 shadow-2xl z-20">
-              <p className="font-body font-bold text-[#e9c176] tracking-widest uppercase text-sm text-center mb-2">
+            <div className="absolute bottom-3 left-4 right-4 bg-black/80 backdrop-blur-md p-4 border border-[#c5a059]/40 shadow-2xl z-20">
+              <p className="font-body font-bold text-[#e9c176] tracking-widest uppercase text-xs text-center mb-1">
                 Vamos comemorar juntos!
               </p>
-              <p className="font-body text-neutral-300 text-[10px] uppercase tracking-widest text-center mb-6">
+              <p className="font-body text-neutral-300 text-[9px] uppercase tracking-widest text-center mb-3">
                 Programe sua agenda e compareça
               </p>
 
-              <div className="flex flex-col gap-5">
-                <div className="flex items-center gap-4 justify-center">
-                  <Beer className="text-[#e9c176] w-7 h-7 stroke-[1.5]" />
-                  <p className="font-bold text-white text-sm md:text-base uppercase tracking-wider">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3 justify-center">
+                  <Beer className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+                  <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Data: 01/05/2026
                   </p>
                 </div>
-                <div className="flex items-center gap-4 justify-center">
-                  <MapPin className="text-[#e9c176] w-7 h-7 stroke-[1.5]" />
-                  <p className="font-bold text-white text-sm md:text-base uppercase tracking-wider">
+                <div className="flex items-center gap-3 justify-center">
+                  <MapPin className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+                  <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Local: Sítio do Honório
                   </p>
                 </div>
@@ -315,7 +396,7 @@ export default function App() {
       </main>
 
       {/* BottomNavBar */}
-      <nav className="fixed bottom-0 left-0 w-full z-50 grid grid-cols-4 items-start px-2 pb-6 pt-3 bg-[#c5a059] shadow-[0_-10px_30px_rgba(0,0,0,0.5)] border-t border-[#e9c176]/50">
+      <nav className="fixed bottom-0 left-0 w-full z-50 grid grid-cols-3 items-start px-2 pb-6 pt-3 bg-[#c5a059] shadow-[0_-10px_30px_rgba(0,0,0,0.5)] border-t border-[#e9c176]/50">
         <a
           className="flex flex-col items-center justify-start text-white hover:text-black transition-all duration-200 px-1 text-center"
           href="#"
@@ -323,15 +404,6 @@ export default function App() {
           <Sparkles size={22} className="mb-1 shrink-0" strokeWidth={1.5} />
           <span className="font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-tight break-words w-full">
             Convite
-          </span>
-        </a>
-        <a
-          className="flex flex-col items-center justify-start text-white hover:text-black transition-all duration-200 px-1 text-center"
-          href="#local"
-        >
-          <MapPin size={22} className="mb-1 shrink-0" strokeWidth={1.5} />
-          <span className="font-sans text-[9px] md:text-[10px] font-bold uppercase tracking-wider leading-tight break-words w-full">
-            Local
           </span>
         </a>
         <a

@@ -37,6 +37,12 @@ export default function Admin() {
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [isAddingAdmin, setIsAddingAdmin] = useState(false);
 
+  // New RSVP State
+  const [newRsvpFirstName, setNewRsvpFirstName] = useState('');
+  const [newRsvpLastName, setNewRsvpLastName] = useState('');
+  const [newRsvpAttending, setNewRsvpAttending] = useState(true);
+  const [isAddingRsvp, setIsAddingRsvp] = useState(false);
+
   useEffect(() => {
     if (!loggedInEmail) return;
 
@@ -215,11 +221,44 @@ export default function Admin() {
     }
   };
 
+  const handleAddRsvp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newRsvpFirstName.trim() || !newRsvpLastName.trim()) return;
+    
+    setIsAddingRsvp(true);
+    try {
+      await addDoc(collection(db, 'rsvps'), {
+        firstName: newRsvpFirstName,
+        lastName: newRsvpLastName,
+        attending: newRsvpAttending,
+        createdAt: new Date(),
+      });
+      setNewRsvpFirstName('');
+      setNewRsvpLastName('');
+      setNewRsvpAttending(true);
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao adicionar convidado.');
+    } finally {
+      setIsAddingRsvp(false);
+    }
+  };
+
+  const handleDeleteRsvp = async (id: string) => {
+    if (!window.confirm('Tem certeza que deseja remover este convidado?')) return;
+    try {
+      await deleteDoc(doc(db, 'rsvps', id));
+    } catch (err) {
+      console.error(err);
+      alert('Erro ao remover convidado.');
+    }
+  };
+
   if (!loggedInEmail) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4 font-body">
         <div className="bg-neutral-900 p-8 rounded-2xl shadow-xl max-w-md w-full text-center border border-[#c5a059]/30">
-          <h1 className="serif-heading text-3xl text-[#e9c176] mb-2">Painel de Controle</h1>
+          <h1 className="serif-heading text-3xl text-[#e9c176] mb-2">Painel ADM</h1>
           <p className="text-neutral-400 mb-6">
             Digite seu e-mail para acessar o painel.
           </p>
@@ -264,7 +303,7 @@ export default function Admin() {
         <header className="flex flex-col md:flex-row justify-between items-center mb-8 bg-neutral-900 p-4 rounded-xl shadow-sm border border-[#c5a059]/30 gap-4">
           <div className="flex items-center gap-3 w-full md:w-auto justify-center md:justify-start">
             <Users className="text-[#e9c176]" size={28} />
-            <h1 className="serif-heading text-2xl text-[#e9c176]">Painel de Controle</h1>
+            <h1 className="serif-heading text-2xl text-[#e9c176]">Painel ADM</h1>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 w-full md:w-auto">
             <a href="/" className="text-sm text-[#c5a059] hover:text-[#e9c176] transition-colors font-bold">
@@ -310,49 +349,95 @@ export default function Admin() {
         {/* Detailed List */}
         <div className="bg-neutral-900 rounded-xl shadow-sm border border-[#c5a059]/30 overflow-hidden mb-8">
           <div className="p-6 border-b border-[#c5a059]/30 bg-neutral-950">
-            <h2 className="serif-heading text-xl text-[#e9c176]">Respostas Detalhadas</h2>
+            <h2 className="serif-heading text-xl text-[#e9c176] mb-4">Respostas Detalhadas</h2>
+            
+            {/* Add RSVP Form */}
+            <form onSubmit={handleAddRsvp} className="flex flex-col md:flex-row gap-3 bg-neutral-900 p-4 rounded-lg border border-[#c5a059]/20">
+              <input
+                type="text"
+                placeholder="Nome"
+                value={newRsvpFirstName}
+                onChange={(e) => setNewRsvpFirstName(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-[#c5a059]/30 focus:outline-none focus:ring-2 focus:ring-[#c5a059] bg-neutral-950 text-white placeholder:text-neutral-600 text-sm"
+                required
+              />
+              <input
+                type="text"
+                placeholder="Sobrenome"
+                value={newRsvpLastName}
+                onChange={(e) => setNewRsvpLastName(e.target.value)}
+                className="flex-1 px-3 py-2 rounded-lg border border-[#c5a059]/30 focus:outline-none focus:ring-2 focus:ring-[#c5a059] bg-neutral-950 text-white placeholder:text-neutral-600 text-sm"
+                required
+              />
+              <select
+                value={newRsvpAttending ? 'true' : 'false'}
+                onChange={(e) => setNewRsvpAttending(e.target.value === 'true')}
+                className="px-3 py-2 rounded-lg border border-[#c5a059]/30 focus:outline-none focus:ring-2 focus:ring-[#c5a059] bg-neutral-950 text-white text-sm"
+              >
+                <option value="true">Confirmado</option>
+                <option value="false">Não vai</option>
+              </select>
+              <button
+                type="submit"
+                disabled={isAddingRsvp}
+                className="flex items-center justify-center gap-2 bg-[#c5a059] hover:bg-[#b38f4a] text-black font-bold py-2 px-4 rounded-lg transition-colors disabled:opacity-70 text-sm whitespace-nowrap"
+              >
+                <UserPlus size={16} />
+                {isAddingRsvp ? 'Adicionando...' : 'Adicionar'}
+              </button>
+            </form>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-neutral-950 border-b border-[#c5a059]/30">
-                  <th className="p-4 font-bold text-[#e9c176] text-sm uppercase tracking-wider">Nome</th>
-                  <th className="p-4 font-bold text-[#e9c176] text-sm uppercase tracking-wider">Status</th>
-                  <th className="p-4 font-bold text-[#e9c176] text-sm uppercase tracking-wider">Data</th>
+                  <th className="px-3 py-3 font-bold text-[#e9c176] text-xs uppercase tracking-wider whitespace-nowrap">Nome</th>
+                  <th className="px-3 py-3 font-bold text-[#e9c176] text-xs uppercase tracking-wider whitespace-nowrap">Status</th>
+                  <th className="px-3 py-3 font-bold text-[#e9c176] text-xs uppercase tracking-wider whitespace-nowrap">Data</th>
+                  <th className="px-3 py-3 font-bold text-[#e9c176] text-xs uppercase tracking-wider whitespace-nowrap text-right">Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {rsvps.length === 0 ? (
                   <tr>
-                    <td colSpan={3} className="p-8 text-center text-neutral-400">
+                    <td colSpan={4} className="p-8 text-center text-neutral-400">
                       Nenhuma resposta recebida ainda.
                     </td>
                   </tr>
                 ) : (
                   rsvps.map((rsvp) => (
                     <tr key={rsvp.id} className="border-b border-neutral-800 last:border-0 hover:bg-neutral-800/50 transition-colors">
-                      <td className="p-4 font-medium text-white">
+                      <td className="px-3 py-3 font-medium text-white text-sm whitespace-nowrap">
                         {rsvp.firstName} {rsvp.lastName}
                       </td>
-                      <td className="p-4">
+                      <td className="px-3 py-3 whitespace-nowrap">
                         {rsvp.attending ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-900/30 text-green-400 border border-green-800/50 text-xs font-bold uppercase tracking-wide">
-                            <CheckCircle size={14} /> Confirmado
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-green-900/30 text-green-400 border border-green-800/50 text-[10px] font-bold uppercase tracking-wide">
+                            <CheckCircle size={12} /> Confirmado
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-900/30 text-red-400 border border-red-800/50 text-xs font-bold uppercase tracking-wide">
-                            <XCircle size={14} /> Não vai
+                          <span className="inline-flex items-center gap-1 px-2 py-1 rounded-full bg-red-900/30 text-red-400 border border-red-800/50 text-[10px] font-bold uppercase tracking-wide">
+                            <XCircle size={12} /> Não vai
                           </span>
                         )}
                       </td>
-                      <td className="p-4 text-sm text-neutral-400">
-                        {rsvp.createdAt?.toDate().toLocaleDateString('pt-BR', {
+                      <td className="px-3 py-3 text-xs text-neutral-400 whitespace-nowrap">
+                        {rsvp.createdAt?.toDate ? rsvp.createdAt.toDate().toLocaleDateString('pt-BR', {
                           day: '2-digit',
                           month: 'short',
                           year: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit'
-                        })}
+                        }) : 'Agora'}
+                      </td>
+                      <td className="px-3 py-3 text-right whitespace-nowrap">
+                        <button
+                          onClick={() => handleDeleteRsvp(rsvp.id)}
+                          className="text-red-400 hover:text-red-300 p-1 rounded transition-colors inline-flex"
+                          title="Excluir Convidado"
+                        >
+                          <Trash2 size={16} />
+                        </button>
                       </td>
                     </tr>
                   ))
