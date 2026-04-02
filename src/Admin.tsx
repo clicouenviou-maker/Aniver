@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, query, orderBy, doc, setDoc, getDoc, addDoc, deleteDoc, where, getDocs } from 'firebase/firestore';
 import { db } from './firebase';
-import { LogIn, LogOut, Users, CheckCircle, XCircle, Image as ImageIcon, Save, UserPlus, Trash2 } from 'lucide-react';
+import { LogIn, LogOut, Users, CheckCircle, XCircle, Image as ImageIcon, Save, UserPlus, Trash2, Download } from 'lucide-react';
 
 interface RSVP {
   id: string;
@@ -318,6 +318,31 @@ export default function Admin() {
     }
   };
 
+  const exportToCSV = () => {
+    let csvContent = "Nome,Sobrenome,Status,Data de Confirmação\n";
+
+    rsvps.forEach(rsvp => {
+      const status = rsvp.attending ? "Confirmado" : "Não vai";
+      const date = rsvp.createdAt?.toDate ? rsvp.createdAt.toDate().toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
+      }) : "N/A";
+      
+      const firstName = `"${rsvp.firstName.replace(/"/g, '""')}"`;
+      const lastName = `"${rsvp.lastName.replace(/"/g, '""')}"`;
+      
+      csvContent += `${firstName},${lastName},${status},${date}\n`;
+    });
+
+    const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.setAttribute("href", url);
+    link.setAttribute("download", "lista_convidados.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
   if (!loggedInEmail) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center p-4 font-body">
@@ -413,7 +438,16 @@ export default function Admin() {
         {/* Detailed List */}
         <div className="bg-neutral-900 rounded-xl shadow-sm border border-[#c5a059]/30 overflow-hidden mb-8">
           <div className="p-6 border-b border-[#c5a059]/30 bg-neutral-950">
-            <h2 className="serif-heading text-xl text-[#e9c176] mb-4">Respostas Detalhadas</h2>
+            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
+              <h2 className="serif-heading text-xl text-[#e9c176]">Respostas Detalhadas</h2>
+              <button
+                onClick={exportToCSV}
+                className="flex items-center gap-2 bg-neutral-800 hover:bg-neutral-700 text-[#e9c176] border border-[#c5a059]/30 px-4 py-2 rounded-lg transition-colors text-sm font-bold whitespace-nowrap"
+              >
+                <Download size={16} />
+                Exportar para Excel
+              </button>
+            </div>
             
             {/* Add RSVP Form */}
             <form onSubmit={handleAddRsvp} className="flex flex-col md:flex-row gap-3 bg-neutral-900 p-4 rounded-lg border border-[#c5a059]/20">

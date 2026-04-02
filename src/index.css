@@ -76,3 +76,30 @@ body {
   animation: shine-border 4s linear infinite;
   animation-delay: 1s; /* Starts slightly after the text shine */
 }
+
+@keyframes spin-border {
+  100% { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+.animated-border-light {
+  position: absolute;
+  inset: 0;
+  padding: 3px;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.animated-border-light::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background: conic-gradient(from 0deg, transparent 75%, #ffdea5 95%, #c5a059 100%);
+  transform: translate(-50%, -50%) rotate(0deg);
+  animation: spin-border 3s linear infinite;
+}

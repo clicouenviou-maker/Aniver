@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Sparkles, UserCheck, Beer, Map, Lock, Clock } from 'lucide-react';
+import { Calendar, MapPin, Sparkles, UserCheck, Beer, Map, Lock, Clock, Share2 } from 'lucide-react';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { db } from './firebase';
@@ -116,6 +116,25 @@ export default function App() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleShare = async () => {
+    const shareData = {
+      title: 'Aniver Renata',
+      text: 'Você está convidado para comemorar comigo! Confira os detalhes no convite:',
+      url: window.location.href,
+    };
+
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copiado para a área de transferência!');
+      }
+    } catch (err) {
+      console.error('Erro ao compartilhar:', err);
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -188,6 +207,9 @@ export default function App() {
             <div className="absolute inset-1 border-[1.5px] border-[#c5a059] z-20 pointer-events-none"></div>
             {/* Inner Gold Border */}
             <div className="absolute inset-2 border border-[#c5a059]/50 z-20 pointer-events-none"></div>
+            
+            {/* Animated Light Border */}
+            <div className="animated-border-light"></div>
 
             {/* Background Image */}
             <img
@@ -388,6 +410,17 @@ export default function App() {
                   </button>
                 </form>
               )}
+            </div>
+            
+            {/* Share Button */}
+            <div className="mt-6 flex justify-center relative z-10">
+              <button
+                onClick={handleShare}
+                className="flex items-center gap-2 text-[#e9c176] hover:text-[#ffdea5] bg-neutral-950/50 hover:bg-neutral-900 px-6 py-3 rounded-full border border-[#c5a059]/30 transition-all duration-300 text-sm font-bold uppercase tracking-wider"
+              >
+                <Share2 size={18} />
+                Compartilhar Convite
+              </button>
             </div>
           </section>
 
