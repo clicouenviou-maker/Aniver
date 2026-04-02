@@ -235,7 +235,7 @@ export default function App() {
                 <span className="text-sm tracking-[0.2em] leading-none mt-1 ml-1">05</span>
               </div>
 
-              <h1 className="script-font text-5xl md:text-6xl drop-shadow-2xl leading-none mt-1 animate-shine-text">
+              <h1 className="script-font text-5xl md:text-6xl drop-shadow-2xl leading-tight mt-3 pb-2 animate-shine-text">
                 Aniver Renata
               </h1>
             </div>
@@ -301,7 +301,7 @@ export default function App() {
                   <img 
                     src={coolerImage} 
                     alt="Cooler" 
-                    className="w-5 h-5 object-contain -rotate-12 drop-shadow-lg shrink-0" 
+                    className="w-7 h-7 object-contain -rotate-12 drop-shadow-lg shrink-0" 
                     referrerPolicy="no-referrer" 
                   />
                   <p className="font-bold text-[#e9c176] text-xs md:text-sm uppercase tracking-wider">
