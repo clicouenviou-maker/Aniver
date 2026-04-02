@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, Sparkles, UserCheck, Beer, Map, Lock } from 'lucide-react';
+import { Calendar, MapPin, Sparkles, UserCheck, Beer, Map, Lock, Clock } from 'lucide-react';
 import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
 import { Link } from 'react-router-dom';
 import { db } from './firebase';
@@ -251,15 +251,32 @@ export default function App() {
 
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3 justify-center">
-                  <Beer className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+                  <Calendar className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
                   <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Data: 01/05/2026
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 justify-center">
+                  <Clock className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+                  <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
+                    Horário: 16:00hs
                   </p>
                 </div>
                 <div className="flex items-center gap-3 justify-center">
                   <MapPin className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
                   <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Local: Sítio do Honório
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 justify-center mt-1">
+                  <img 
+                    src="https://storage.googleapis.com/aistudio-user-uploads-us-east1/660416/20250402T011740941Z/cooler.png" 
+                    alt="Cooler" 
+                    className="w-8 h-8 object-contain -rotate-12 drop-shadow-lg" 
+                    referrerPolicy="no-referrer" 
+                  />
+                  <p className="font-bold text-[#e9c176] text-sm md:text-base uppercase tracking-wider">
+                    Open Cooler
                   </p>
                 </div>
               </div>
@@ -269,32 +286,6 @@ export default function App() {
 
         {/* Additional Details & RSVP */}
         <div className="space-y-12">
-          {/* Location Details */}
-          <section className="text-center px-4">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-900 text-[#e9c176] mb-4 border border-[#c5a059]/30">
-              <Map size={24} strokeWidth={1.5} />
-            </div>
-            <h3 className="serif-heading text-2xl text-[#e9c176] mb-3">Como Chegar</h3>
-            <p className="text-neutral-400 text-sm leading-relaxed mb-6">
-              O Sítio do Honório é um refúgio cercado pela natureza. Preparamos um mapa para facilitar sua chegada.
-            </p>
-            
-            <div className="w-full rounded-xl overflow-hidden shadow-md border border-[#c5a059]/30 bg-neutral-900">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!4v1775083858759!6m8!1m7!1sSscnbQfssEJAPI11bczYJw!2m2!1d-21.69676751136075!2d-43.0789804187288!3f0.2798825395250226!4f-0.18426403253498336!5f0.7820865974627469" 
-                width="100%" 
-                height="350" 
-                style={{ border: 0 }} 
-                allowFullScreen={true} 
-                loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade"
-                title="Local do Evento"
-              ></iframe>
-            </div>
-          </section>
-
-          <hr className="border-[#c5a059]/30 w-24 mx-auto" />
-
           {/* RSVP Form Section */}
           <section className="bg-neutral-900 p-8 rounded-2xl relative overflow-hidden border border-[#c5a059]/30 shadow-sm" id="rsvp">
             <div className="absolute top-0 right-0 p-6 opacity-5 pointer-events-none">
@@ -390,6 +381,32 @@ export default function App() {
                   </button>
                 </form>
               )}
+            </div>
+          </section>
+
+          <hr className="border-[#c5a059]/30 w-24 mx-auto" />
+
+          {/* Location Details */}
+          <section className="text-center px-4">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-900 text-[#e9c176] mb-4 border border-[#c5a059]/30">
+              <Map size={24} strokeWidth={1.5} />
+            </div>
+            <h3 className="serif-heading text-2xl text-[#e9c176] mb-3">Como Chegar</h3>
+            <p className="text-neutral-400 text-sm leading-relaxed mb-6">
+              O Sítio do Honório é um refúgio cercado pela natureza. Preparamos um mapa para facilitar sua chegada.
+            </p>
+            
+            <div className="w-full rounded-xl overflow-hidden shadow-md border border-[#c5a059]/30 bg-neutral-900">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!4v1775083858759!6m8!1m7!1sSscnbQfssEJAPI11bczYJw!2m2!1d-21.69676751136075!2d-43.0789804187288!3f0.2798825395250226!4f-0.18426403253498336!5f0.7820865974627469" 
+                width="100%" 
+                height="350" 
+                style={{ border: 0 }} 
+                allowFullScreen={true} 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Local do Evento"
+              ></iframe>
             </div>
           </section>
         </div>
