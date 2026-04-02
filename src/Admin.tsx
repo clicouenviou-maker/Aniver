@@ -30,8 +30,11 @@ export default function Admin() {
 
   // Settings State
   const [heroImageUrl, setHeroImageUrl] = useState('');
+  const [coolerImageUrl, setCoolerImageUrl] = useState('');
   const [isSavingImage, setIsSavingImage] = useState(false);
   const [imageSaveMessage, setImageSaveMessage] = useState('');
+  const [isSavingCoolerImage, setIsSavingCoolerImage] = useState(false);
+  const [coolerImageSaveMessage, setCoolerImageSaveMessage] = useState('');
 
   // Admin Emails State
   const [newAdminEmail, setNewAdminEmail] = useState('');
@@ -85,8 +88,14 @@ export default function Admin() {
       try {
         const docRef = doc(db, 'settings', 'invitation');
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().heroImageUrl) {
-          setHeroImageUrl(docSnap.data().heroImageUrl);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.heroImageUrl) {
+            setHeroImageUrl(data.heroImageUrl);
+          }
+          if (data.coolerImageUrl) {
+            setCoolerImageUrl(data.coolerImageUrl);
+          }
         }
       } catch (err) {
         console.error("Erro ao buscar configurações:", err);
@@ -191,6 +200,61 @@ export default function Admin() {
       setImageSaveMessage('Erro ao salvar imagem.');
     } finally {
       setIsSavingImage(false);
+    }
+  };
+
+  const handleCoolerImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const MAX_WIDTH = 500;
+        const MAX_HEIGHT = 500;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > MAX_WIDTH) {
+            height *= MAX_WIDTH / width;
+            width = MAX_WIDTH;
+          }
+        } else {
+          if (height > MAX_HEIGHT) {
+            width *= MAX_HEIGHT / height;
+            height = MAX_HEIGHT;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx?.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/png', 0.8);
+        setCoolerImageUrl(dataUrl);
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveCoolerImage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSavingCoolerImage(true);
+    setCoolerImageSaveMessage('');
+    try {
+      await setDoc(doc(db, 'settings', 'invitation'), { coolerImageUrl }, { merge: true });
+      setCoolerImageSaveMessage('Imagem do cooler atualizada com sucesso!');
+      setTimeout(() => setCoolerImageSaveMessage(''), 3000);
+    } catch (err) {
+      console.error(err);
+      setCoolerImageSaveMessage('Erro ao salvar imagem do cooler.');
+    } finally {
+      setIsSavingCoolerImage(false);
     }
   };
 
@@ -482,6 +546,46 @@ export default function Admin() {
               <p className="text-xs text-neutral-400 mb-2 uppercase tracking-wider">Pré-visualização:</p>
               <div className="w-full max-w-sm h-48 rounded-lg overflow-hidden border border-[#c5a059]/30">
                 <img src={heroImageUrl} alt="Preview" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Cooler Image Management Section */}
+        <div className="bg-neutral-900 p-6 rounded-xl shadow-sm border border-[#c5a059]/30 mb-8">
+          <div className="flex items-center gap-3 mb-4">
+            <ImageIcon className="text-[#e9c176]" size={24} />
+            <h2 className="serif-heading text-xl text-[#e9c176]">Imagem do Cooler</h2>
+          </div>
+          <p className="text-sm text-neutral-400 mb-4">
+            Faça o upload da imagem que você deseja exibir ao lado do texto "Open Cooler".
+          </p>
+          <form onSubmit={handleSaveCoolerImage} className="flex flex-col gap-4">
+            <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-[#c5a059]/30 border-dashed rounded-lg cursor-pointer bg-neutral-950 hover:bg-neutral-900 transition-colors">
+              <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center px-4">
+                <ImageIcon className="w-8 h-8 mb-3 text-[#c5a059]" />
+                <p className="mb-2 text-sm text-neutral-400"><span className="font-bold text-[#e9c176]">Clique para fazer upload</span> ou arraste a imagem</p>
+                <p className="text-xs text-neutral-500">PNG, JPG ou GIF (fundo transparente recomendado)</p>
+              </div>
+              <input type="file" className="hidden" accept="image/*" onChange={handleCoolerImageUpload} />
+            </label>
+            <button
+              type="submit"
+              disabled={isSavingCoolerImage || !coolerImageUrl}
+              className="flex items-center justify-center gap-2 bg-[#c5a059] hover:bg-[#b38f4a] text-black font-bold py-3 px-6 rounded-lg transition-colors disabled:opacity-70 w-full md:w-auto md:self-end"
+            >
+              <Save size={18} />
+              {isSavingCoolerImage ? 'Salvando...' : 'Salvar Imagem do Cooler'}
+            </button>
+          </form>
+          {coolerImageSaveMessage && (
+            <p className="mt-3 text-sm font-medium text-green-400">{coolerImageSaveMessage}</p>
+          )}
+          {coolerImageUrl && (
+            <div className="mt-4">
+              <p className="text-xs text-neutral-400 mb-2 uppercase tracking-wider">Pré-visualização:</p>
+              <div className="w-24 h-24 rounded-lg overflow-hidden border border-[#c5a059]/30 bg-black/50 flex items-center justify-center p-2">
+                <img src={coolerImageUrl} alt="Preview Cooler" className="w-full h-full object-contain" />
               </div>
             </div>
           )}

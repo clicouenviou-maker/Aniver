@@ -15,6 +15,7 @@ export default function App() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [heroImage, setHeroImage] = useState('https://images.unsplash.com/photo-1516483638261-f40af5ee22dd?q=80&w=2127&auto=format&fit=crop');
+  const [coolerImage, setCoolerImage] = useState('https://storage.googleapis.com/aistudio-user-uploads-us-east1/660416/20250402T121758957Z/cooler.png');
 
   const calculateTimeLeft = () => {
     const targetDate = new Date('2026-05-01T12:00:00');
@@ -72,11 +73,17 @@ export default function App() {
       try {
         const docRef = doc(db, 'settings', 'invitation');
         const docSnap = await getDoc(docRef);
-        if (docSnap.exists() && docSnap.data().heroImageUrl) {
-          setHeroImage(docSnap.data().heroImageUrl);
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data.heroImageUrl) {
+            setHeroImage(data.heroImageUrl);
+          }
+          if (data.coolerImageUrl) {
+            setCoolerImage(data.coolerImageUrl);
+          }
         }
       } catch (err) {
-        console.error("Erro ao buscar imagem:", err);
+        console.error("Erro ao buscar configurações:", err);
       }
     };
     fetchSettings();
@@ -194,19 +201,19 @@ export default function App() {
             <div className="absolute top-0 left-0 w-full h-3/5 bg-gradient-to-b from-black/80 via-black/40 to-transparent z-10"></div>
 
             {/* Top Text */}
-            <div className="absolute top-10 left-0 w-full text-center z-20 px-4 flex flex-col items-center">
-              <h2 className="serif-heading text-xl md:text-2xl text-[#e9c176] tracking-[0.25em] uppercase mb-5 drop-shadow-md">
+            <div className="absolute top-4 left-0 w-full text-center z-20 px-4 flex flex-col items-center">
+              <h2 className="serif-heading text-lg md:text-xl text-[#e9c176] tracking-[0.25em] uppercase mb-3 drop-shadow-md">
                 Save The Date
               </h2>
               
               {/* Date Symbol */}
-              <div className="mb-3 w-24 h-24 rounded-full border-[1.5px] border-[#e9c176] bg-black/20 backdrop-blur-sm flex flex-col items-center justify-center text-[#ffdea5] shadow-2xl">
-                <span className="text-3xl serif-heading leading-none mb-1">01</span>
-                <span className="w-10 h-[1px] bg-[#e9c176]/60"></span>
-                <span className="text-lg tracking-[0.2em] leading-none mt-1 ml-1">05</span>
+              <div className="mb-2 w-20 h-20 rounded-full border-[1.5px] border-[#e9c176] bg-black/20 backdrop-blur-sm flex flex-col items-center justify-center text-[#ffdea5] shadow-2xl">
+                <span className="text-2xl serif-heading leading-none mb-1">01</span>
+                <span className="w-8 h-[1px] bg-[#e9c176]/60"></span>
+                <span className="text-sm tracking-[0.2em] leading-none mt-1 ml-1">05</span>
               </div>
 
-              <h1 className="script-font text-6xl md:text-7xl drop-shadow-2xl leading-none mt-2 animate-shine-text">
+              <h1 className="script-font text-5xl md:text-6xl drop-shadow-2xl leading-none mt-1 animate-shine-text">
                 Aniver Renata
               </h1>
             </div>
@@ -249,33 +256,33 @@ export default function App() {
                 Programe sua agenda e compareça
               </p>
 
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3 justify-center">
-                  <Calendar className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+              <div className="flex flex-col gap-2 max-w-[200px] mx-auto">
+                <div className="flex items-center gap-3 justify-start">
+                  <Calendar className="text-[#e9c176] w-5 h-5 stroke-[1.5] shrink-0" />
                   <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Data: 01/05/2026
                   </p>
                 </div>
-                <div className="flex items-center gap-3 justify-center">
-                  <Clock className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+                <div className="flex items-center gap-3 justify-start">
+                  <Clock className="text-[#e9c176] w-5 h-5 stroke-[1.5] shrink-0" />
                   <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Horário: 16:00hs
                   </p>
                 </div>
-                <div className="flex items-center gap-3 justify-center">
-                  <MapPin className="text-[#e9c176] w-5 h-5 stroke-[1.5]" />
+                <div className="flex items-center gap-3 justify-start">
+                  <MapPin className="text-[#e9c176] w-5 h-5 stroke-[1.5] shrink-0" />
                   <p className="font-bold text-white text-xs md:text-sm uppercase tracking-wider">
                     Local: Sítio do Honório
                   </p>
                 </div>
-                <div className="flex items-center gap-3 justify-center mt-1">
+                <div className="flex items-center gap-3 justify-start mt-1">
                   <img 
-                    src="https://storage.googleapis.com/aistudio-user-uploads-us-east1/660416/20250402T011740941Z/cooler.png" 
+                    src={coolerImage} 
                     alt="Cooler" 
-                    className="w-8 h-8 object-contain -rotate-12 drop-shadow-lg" 
+                    className="w-5 h-5 object-contain -rotate-12 drop-shadow-lg shrink-0" 
                     referrerPolicy="no-referrer" 
                   />
-                  <p className="font-bold text-[#e9c176] text-sm md:text-base uppercase tracking-wider">
+                  <p className="font-bold text-[#e9c176] text-xs md:text-sm uppercase tracking-wider">
                     Open Cooler
                   </p>
                 </div>
